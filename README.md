@@ -8,3 +8,5 @@
 8. Train Model and get results
 9. Merge result using resmerger.py
 10. Convert result into tif by png2georef.py
+11. For reverse geocoding reversegeocode.py can be used
+12. Desktop application can created using qttut2.py
