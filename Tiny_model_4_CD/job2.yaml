@@ -1,0 +1,53 @@
+name: job1
+
+resources:
+  cloud: gcp
+  #accelerators: T4:1
+  accelerators: p4:1
+  #accelerators: K80:1
+  #region: asia-south1
+  region: asia-southeast1
+  #region: asia-east1
+  
+workdir: /home/user/Desktop/ind/Tiny_model_4_CD
+
+file_mounts:
+  /datasets-storage:
+    #name: sky-dataset  # Name of storage, optional when source is bucket URI
+    source: gs://pune_catrosat2  # Source path, can be local or s3/gcs URL. Optional, do not specify to create an empty bucket.
+    store: gcs
+    #persistent: True  # Defaults to True; can be set to false. Optional.
+    mode: COPY 
+  
+  /model: gs://whuckpt/run_0000/model_10.pth
+    
+  /outputs-mount:
+    #name: ckpts
+    source: gs://whuckpt
+    #store: gcs
+    mode: MOUNT
+    
+setup: |
+  echo "starting......"
+  pip list
+  nvidia-smi
+  pip install albumentations
+  pip install neptune_pytorch
+  pip install neptune
+  #pip install torch==2.0.1
+  #pip install torch==1.13
+  pip install torchvision==0.15.2
+  #pip install torchvision==0.11.1+cu113 torchaudio==0.10.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+  pip install tensorboard==2.13.0
+  pip install matplotlib
+  #conda create --name TinyCD --file requirements.txt
+  #conda activate TinyCD
+
+run : |
+  python3 training.py --datapath /datasets-storage --log-path /outputs-mount
+  #/home/gcpuser/sky_workdir/ckpts
+  
+
+
+
+
